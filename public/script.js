@@ -7,6 +7,8 @@ const courseSelect = document.getElementById('course');
 const id = document.getElementById('uvuId');
 const ul = document.getElementById('logs');
 const button = document.getElementById('submit');
+const textBox = document.getElementById('logText');
+const lightDark = document.getElementById('lightordark');
 
 function onPageLoad() {
   id.addEventListener('input', idInput);
@@ -18,7 +20,8 @@ function onPageLoad() {
     .addEventListener('change', changeTheme);
 
   id.style.visibility = 'hidden';
-  document.getElementById('submit').disabled = true;
+  button.disabled = true;
+  textBox.disabled = true;
 
   loadTheme();
   LoadCourse();
@@ -31,7 +34,7 @@ function changeTheme() {
   if (lightTheme.matches || darkTheme.matches) {
     const theme = lightTheme.matches ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', theme);
-    document.getElementById('lightordark').innerHTML = `${theme} mode`;
+    lightDark.innerHTML = `${theme} mode`;
     localStorage.setItem('displayPref', theme);
   }
 }
@@ -53,12 +56,12 @@ function loadTheme() {
     toggle.checked =
       localStorage.getItem('displayPref') === 'light' ? true : false;
 
-    document.getElementById('lightordark').innerHTML = `${localStorage.getItem(
+    lightDark.innerHTML = `${localStorage.getItem(
       'displayPref'
     )} mode`;
   } else if (lightTheme.matches || darkTheme.matches) {
     const theme = lightTheme.matches ? 'light' : 'dark';
-    document.getElementById('lightordark').innerHTML = `${theme} mode`;
+    lightDark.innerHTML = `${theme} mode`;
     toggle.checked = lightTheme.matches;
     console.log(`Browser Pref: ${theme}`);
     document.documentElement.setAttribute('data-theme', theme);
@@ -67,7 +70,7 @@ function loadTheme() {
     // default to light
     localStorage.setItem('displayPref', 'light');
     toggle.checked = true;
-    document.getElementById('lightordark').innerHTML = `light mode`;
+    lightDark.innerHTML = `light mode`;
     console.log('Browser Pref: unknown');
     document.documentElement.setAttribute('data-theme', 'light');
   }
@@ -76,7 +79,7 @@ function loadTheme() {
 function setMode(input) {
   const theme = input.checked ? 'light' : 'dark';
   localStorage.setItem('displayPref', theme);
-  document.getElementById('lightordark').innerHTML = `${theme} mode`;
+  lightDark.innerHTML = `${theme} mode`;
   document.documentElement.setAttribute('data-theme', theme);
 }
 
@@ -103,7 +106,7 @@ function displayUVUID(value) {
   if (value == '') {
     id.style.visibility = 'hidden';
     // gets rid of old logs
-    document.getElementById('logs').innerHTML = '';
+    ul.innerHTML = '';
   } else {
     id.style.visibility = 'visible';
     // updates the logs
@@ -119,10 +122,11 @@ function idInput(value) {
   if (value.target.value.length == 8) {
     axios
       .get(
-        `https://jsonserver3csmr5vg-vqhe--3000--31fc58ec.local-corp.webcontainer.io/logs?courseId=${courseSelect.value}&uvuId=${id.value}`
+        `http://localhost:3000/logs?courseId=${courseSelect.value}&uvuId=${id.value}`
       )
       .then(function (response) {
         button.disabled = false;
+        textBox.disabled = false;
         ul.innerHTML = '';
         response.data.forEach(function (itemText) {
           let li = `<li><div><small>${itemText.date}</small></div><pre><p>${itemText.text}</p></pre></li>`;
@@ -137,6 +141,7 @@ function idInput(value) {
     // clear logs and disable button because its an invalid uvuId
     ul.innerHTML = '';
     button.disabled = true;
+    textBox.disabled = true;
   }
 }
 
@@ -152,10 +157,12 @@ function hideLog(obj) {
 }
 
 function postLog() {
-  if (document.getElementById('logText').value != '') {
+  if (textBox.value != '' && id.value.length == 8) {
     button.disabled = false;
+    textBox.disabled = false;
   } else {
     button.disabled = true;
+    textBox.disabled = true;
   }
 }
 
@@ -165,12 +172,12 @@ function submitButton(event) {
   var now = new Date();
   axios
     .post(
-      'https://jsonserver3csmr5vg-vqhe--3000--31fc58ec.local-corp.webcontainer.io/logs',
+      'http://localhost:3000/logs',
       {
-        courseId: document.getElementById('course').value,
-        uvuId: document.getElementById('uvuId').value,
+        courseId: courseSelect.value,
+        uvuId: id.value,
         date: now.toLocaleString(),
-        text: document.getElementById('logText').value,
+        text: textBox.value,
       }
     )
     .then(function (response) {
@@ -181,5 +188,5 @@ function submitButton(event) {
     });
 
   // added this line to fix the error in my project 1
-  idInput({ target: { value: document.getElementById('uvuId').value } });
+  idInput({ target: { value: id.value } });
 }
