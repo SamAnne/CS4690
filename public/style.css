@@ -1,0 +1,152 @@
+/* DONE: make it look awesome. */
+/* DONE: make it responsive. */
+
+:root {
+  /* Default light mode variables */
+  --uvu-background-color: #fff;
+  --uvu-text-color: #545454;
+  --uvu-text-hover: #f1f3f9;
+  --uvu-green: #275d38;
+  --uvu-border: #ccc;
+}
+
+/* Dark mode variables applied when the data-theme attribute is set to 'dark' on the html or body element */
+[data-theme='dark'] {
+  --uvu-background-color: #000;
+  --uvu-text-color: #ffffff;
+  --uvu-text-hover: #8e8c89;
+  --uvu-green: #1e482c;
+  --uvu-border: #6f937a;
+}
+
+#body {
+  display: flex;
+  height: 100vh;
+  background-color: var(--uvu-background-color);
+  justify-content: center;
+  align-items: center;
+
+  /* justify-content: stretch; */
+}
+
+#topbar {
+  background-color: var(--uvu-background-color);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  left: 0;
+  padding-right: 1.7rem;
+  padding-left: 1.7rem;
+  border-bottom: 2px solid var(--uvu-border);
+  opacity: 1;
+}
+
+.topitem {
+  display: flex;
+  align-items: center;
+  width: auto;
+  height: 3rem;
+  padding: 1rem;
+}
+
+.topitem:hover {
+  background-color: var(--uvu-text-hover);
+}
+
+#container {
+  margin-top: 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 3rem;
+  color: var(--uvu-text-color);
+  border-radius: 2rem;
+  text-align: center;
+}
+
+.list {
+  font-size: 1rem;
+  /* list-style-position: inside; */
+  max-height: 12rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 2rem;
+  border: 0.4rem solid var(--uvu-border);
+  background-color: var(--uvu-background-color);
+  font-family: 'Rajdhani', arial, sans-serif;
+  color: var(--uvu-text-color);
+  text-align: left;
+}
+
+#uvuIdDisplay {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.UVUtitle {
+  color: #275d38;
+  text-decoration: none;
+  font-family: 'Rajdhani', arial, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.1em;
+  text-transform: uppercase;
+}
+
+/* This is from 
+  https://stackoverflow.com/questions/76837048/creating-the-simplest-html-toggle-button
+*/
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--uvu-green);
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: '';
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: var(--uvu-background-color);
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.toggle {
+  /* margin-left: auto; */
+  right: 3rem;
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.toggle input {
+  display: none;
+}
+
+input:checked + .slider {
+  background-color: #8e8c89;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+#lightordark {
+  margin-left: auto;
+  padding-right: 4rem;
+}

@@ -1,0 +1,130 @@
+{
+  "logs": [
+    {
+      "courseId": "cs4660",
+      "uvuId": "10111111",
+      "date": "1/23/2021 1:23:36 PM",
+      "text": "Initial comment. Hello World",
+      "id": "8saD4s6"
+    },
+    {
+      "courseId": "cs4660",
+      "uvuId": "10111111",
+      "date": "1/24/2021 2:43:12 PM",
+      "text": "MongoDB is looking really good, still need to get atlas up and running.",
+      "id": "6F3QamJ"
+    },
+    {
+      "courseId": "cs4660",
+      "uvuId": "10222222",
+      "date": "1/27/2021 5:58:10 PM",
+      "text": "Atlas is up and running",
+      "id": "AzL00pn"
+    },
+    {
+      "courseId": "cs3380",
+      "uvuId": "10333333",
+      "date": "1/28/2021 3:53:52 PM",
+      "text": "Learned about clusters\n\nStill trying to wrap my mind around the concept",
+      "id": "1BBXmsH"
+    },
+    {
+      "courseId": "cs4660",
+      "uvuId": "10222222",
+      "date": "1/8/2022, 7:41:28 PM",
+      "text": "Hopefully we get better at testing when we start working on Cypress",
+      "id": "3A0rSmx"
+    },
+    {
+      "courseId": "cs4660",
+      "uvuId": "10111111",
+      "date": "1/10/2022, 7:27:40 PM",
+      "text": "Initial jquery practicum works.",
+      "id": "LMH7POH"
+    },
+    {
+      "courseId": "cs4660",
+      "uvuId": "10111111",
+      "date": 1769153671207,
+      "text": "my name is ansam",
+      "id": "xLRhMjb"
+    },
+    {
+      "courseId": "cs4660",
+      "uvuId": "10111111",
+      "date": "1/23/2026, 12:38:02 AM",
+      "text": "my name is ansam",
+      "id": "HfWj0PP"
+    },
+    {
+      "courseId": "cs4660",
+      "uvuId": "10111111",
+      "date": "1/23/2026, 12:39:28 AM",
+      "text": "i did it",
+      "id": "5K46r7-"
+    },
+    {
+      "courseId": "cs3380",
+      "uvuId": "10222221",
+      "date": "1/23/2026, 1:40:17 AM",
+      "text": "new comment",
+      "id": "B_ENj3Y"
+    },
+    {
+      "courseId": "cs4660",
+      "uvuId": "34564564",
+      "date": "2/1/2026, 10:57:22 PM",
+      "text": "new log",
+      "id": "g4qwE3R"
+    },
+    {
+      "courseId": "cs4660",
+      "uvuId": "10111111",
+      "date": "2/7/2026, 6:40:32 PM",
+      "text": "i did it 2",
+      "id": "ESN2TVC"
+    },
+    {
+      "courseId": "cs4660",
+      "uvuId": "10111111",
+      "date": "2/7/2026, 7:57:25 PM",
+      "text": "testing 2",
+      "id": "9U3950u"
+    },
+    {
+      "courseId": "cs4660",
+      "uvuId": "10111111",
+      "date": "2/7/2026, 7:57:35 PM",
+      "text": "testing 2",
+      "id": "vckI03y"
+    },
+    {
+      "courseId": "cs4660",
+      "uvuId": "10111111",
+      "date": "2/7/2026, 7:57:45 PM",
+      "text": "testing 3",
+      "id": "RmVxTu4"
+    },
+    {
+      "courseId": "cs4660",
+      "uvuId": "10111111",
+      "date": "2/7/2026, 7:57:45 PM",
+      "text": "testing 3",
+      "id": "fOd1y9V"
+    }
+  ],
+  "courses": [
+    {
+      "id": "cs3380",
+      "display": "CS 3380"
+    },
+    {
+      "id": "cs4660",
+      "display": "CS 4660"
+    },
+    {
+      "id": "cs4690",
+      "display": "CS 4690"
+    }
+  ]
+}
