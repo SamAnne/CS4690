@@ -1,17 +1,18 @@
 // DONE: Wire up the app's behavior here.
 // NOTE: The TODOs are listed in index.html
-// npm run server
+// npm run 
 
-const toggle = document.getElementById('dark_light');
-const courseSelect = document.getElementById('course');
-const id = document.getElementById('uvuId');
-const ul = document.getElementById('logs');
-const button = document.getElementById('submit');
-const textBox = document.getElementById('logText');
-const lightDark = document.getElementById('lightordark');
 
-function onPageLoad() {
-  id.addEventListener('input', idInput);
+const toggle = $('#dark_light');
+const courseSelect = $('#course');
+const id = $('#uvuId');
+const ul = $('#logs');
+const button = $('#submit');
+const textBox = $('#logText');
+const lightDark = $('#lightordark');
+
+$(window).on("load", function() {
+  id.on('input', idInput);
   // this line is why it didn't work for the AI in class
   // because the listener was on a const variable instead
   // of on the window.matchMedia itself (I think)
@@ -19,13 +20,13 @@ function onPageLoad() {
     .matchMedia('(prefers-color-scheme: dark)')
     .addEventListener('change', changeTheme);
 
-  id.style.visibility = 'hidden';
-  button.disabled = true;
-  textBox.disabled = true;
+  id.css('visibility','hidden');
+  button.prop('disabled', true);
+  textBox.prop('disabled', true);
 
   loadTheme();
   LoadCourse();
-}
+});
 
 function changeTheme() {
   const darkTheme = window.matchMedia('(prefers-color-scheme: dark)');
@@ -33,7 +34,8 @@ function changeTheme() {
 
   if (lightTheme.matches || darkTheme.matches) {
     const theme = lightTheme.matches ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', theme);
+    $('html').attr('data-theme', theme);
+    //document.documentElement.setAttribute('data-theme', theme);
     lightDark.innerHTML = `${theme} mode`;
     localStorage.setItem('displayPref', theme);
   }
@@ -62,15 +64,15 @@ function loadTheme() {
   } else if (lightTheme.matches || darkTheme.matches) {
     const theme = lightTheme.matches ? 'light' : 'dark';
     lightDark.innerHTML = `${theme} mode`;
-    toggle.checked = lightTheme.matches;
+    toggle.prop('checked', lightTheme.matches);
     console.log(`Browser Pref: ${theme}`);
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('displayPref', theme);
   } else {
     // default to light
     localStorage.setItem('displayPref', 'light');
-    toggle.checked = true;
-    lightDark.innerHTML = `light mode`;
+    toggle.prop('checked', true);
+    lightDark.html(`light mode`);
     console.log('Browser Pref: unknown');
     document.documentElement.setAttribute('data-theme', 'light');
   }
@@ -79,69 +81,63 @@ function loadTheme() {
 function setMode(input) {
   const theme = input.checked ? 'light' : 'dark';
   localStorage.setItem('displayPref', theme);
-  lightDark.innerHTML = `${theme} mode`;
+  lightDark.html(`${theme} mode`);
   document.documentElement.setAttribute('data-theme', theme);
 }
 
 async function LoadCourse() {
-  await axios
-    .get('/courses')
-    .then(function (response) {
-      courseSelect.innerHTML = '';
+  try {
+    await $.get('/courses', function(response){
+      courseSelect.html('');
       // default selected value
       var chooseOpt = `<option selected value="">Choose Courses</option>`;
-      courseSelect.innerHTML += chooseOpt;
+      courseSelect.append(chooseOpt);
 
-      for (let option of response.data) {
+      for (let option of response) {
         var opt = `<option value="${option.id}">${option.display}</option>`;
-        courseSelect.innerHTML += opt;
+        courseSelect.append(opt);
       }
-    })
-    .catch(function (error) {
-      console.log(error);
     });
+  }
+  catch (error){
+    console.log(error);
+  }
 }
 
 function displayUVUID(value) {
   if (value == '') {
-    id.style.visibility = 'hidden';
+    id.css('visibility', 'hidden');
     // gets rid of old logs
-    ul.innerHTML = '';
+    ul.html('');
   } else {
-    id.style.visibility = 'visible';
+    id.css('visibility', 'visible');
     // updates the logs
-    idInput({ target: { value: id.value } });
+    idInput({ target: { value: id.val() } });
   }
 }
 
-function idInput(value) {
-  document.getElementById(
-    'uvuIdDisplay'
-  ).innerHTML = `Student Logs for ${value.target.value}`;
-
+async function idInput(value) {
+  $('#uvuIdDisplay').html(`Student Logs for ${value.target.value}`);
   if (value.target.value.length == 8) {
-    axios
-      .get(
-        `http://localhost:3000/logs?courseId=${courseSelect.value}&uvuId=${id.value}`
-      )
-      .then(function (response) {
-        button.disabled = false;
-        textBox.disabled = false;
-        ul.innerHTML = '';
-        response.data.forEach(function (itemText) {
+    try {
+      await $.get(`http://localhost:3000/logs?courseId=${courseSelect.val()}&uvuId=${id.val()}`, function(response){
+        button.prop('disabled', false);
+        textBox.prop('disabled', false);
+        ul.html('');
+        response.forEach(function (itemText) {
           let li = `<li><div><small>${itemText.date}</small></div><pre><p>${itemText.text}</p></pre></li>`;
-          ul.innerHTML += li;
+          ul.append(li);
         });
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
       });
+    }
+    catch(error){
+      console.log(error);
+    }
   } else {
     // clear logs and disable button because its an invalid uvuId
-    ul.innerHTML = '';
-    button.disabled = true;
-    textBox.disabled = true;
+    ul.html('');
+    button.prop('disabled', true);
+    textBox.prop('disabled', true);
   }
 }
 
@@ -157,36 +153,34 @@ function hideLog(obj) {
 }
 
 function postLog() {
-  if (textBox.value != '' && id.value.length == 8) {
-    button.disabled = false;
-    textBox.disabled = false;
+  if (textBox.val() != '' && id.val().length == 8) {
+    button.prop('disabled', false);
+    textBox.prop('disabled', false);
   } else {
-    button.disabled = true;
-    textBox.disabled = true;
+    button.prop('disabled', true);
+    textBox.prop('disabled', true);
   }
 }
 
-function submitButton(event) {
+async function submitButton(event) {
   // to prevent it from refreshing
   event.preventDefault();
   var now = new Date();
-  axios
-    .post(
-      'http://localhost:3000/logs',
-      {
-        courseId: courseSelect.value,
-        uvuId: id.value,
+  try{
+    await $.post('http://localhost:3000/logs', {
+        courseId: courseSelect.val(),
+        uvuId: id.val(),
         date: now.toLocaleString(),
-        text: textBox.value,
-      }
-    )
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+        text: textBox.val(),
+      }, function(data, status) {
+        console.log(data);
+        console.log(status);
+      });
+  }
+  catch(error){
+    console.log(error);
+  }
 
   // added this line to fix the error in my project 1
-  idInput({ target: { value: id.value } });
+  idInput({ target: { value: id.val() } });
 }
