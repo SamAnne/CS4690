@@ -6,6 +6,11 @@
     "server": "json-server db.json --routes routes.json"
   },
   "devDependencies": {
+    "@types/jquery": "^3.5.33",
     "json-server": "0.17.0"
+  },
+  "dependencies": {
+    "jquery": "^4.0.0",
+    "typescript": "^5.9.3"
   }
 }

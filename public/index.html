@@ -69,8 +69,8 @@
             placeholder="10234567"
           />
 
-          <h3 id="uvuIdDisplay" data-cy="uvuIdDisplay">Student Logs for</h3>
-          <ul data-cy="logs" id="logs" onclick="hideLog(this)" class="list-group overflow-auto border" style="max-height: 30vh"></ul>
+          <h5 id="uvuIdDisplay" data-cy="uvuIdDisplay">Student Logs for</h5>
+          <ul data-cy="logs" id="logs" onclick="hideLog(this)" class="list-group overflow-auto border"></ul>
           <div id="bottom">
             <label class="p-2">New Log</label><br />
             <textarea
@@ -93,9 +93,17 @@
             </button>
           </div>
         </form>
-      </div>
-      <script src="script.js"></script>
+      </div> 
     </div>
+    <!-- <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script>
+      if (typeof jQuery === 'undefined') {
+        var script = document.createElement('script');
+        script.src = 'https://code.jquery.com/jquery-3.7.1.min.js';
+        document.head.appendChild(script);
+      }
+    </script> -->
+    <script src="script.js"></script>
   </body>
 </html>
 
