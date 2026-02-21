@@ -36,7 +36,7 @@ function changeTheme() {
     const theme = lightTheme.matches ? 'light' : 'dark';
     $('html').attr('data-theme', theme);
     //document.documentElement.setAttribute('data-theme', theme);
-    lightDark.innerHTML = `${theme} mode`;
+    lightDark.html(`${theme} mode`);
     localStorage.setItem('displayPref', theme);
   }
 }
@@ -51,22 +51,24 @@ function loadTheme() {
   console.log(print);
 
   if (localStorage.getItem('displayPref')) {
-    document.documentElement.setAttribute(
-      'data-theme',
-      localStorage.getItem('displayPref')
-    );
+    $('html').attr('data-bs-theme', localStorage.getItem('displayPref'));
+    // document.documentElement.setAttribute(
+    //   'data-theme',
+    //   localStorage.getItem('displayPref')
+    // );
     toggle.checked =
       localStorage.getItem('displayPref') === 'light' ? true : false;
 
-    lightDark.innerHTML = `${localStorage.getItem(
+    lightDark.html(`${localStorage.getItem(
       'displayPref'
-    )} mode`;
+    )} mode`);
   } else if (lightTheme.matches || darkTheme.matches) {
     const theme = lightTheme.matches ? 'light' : 'dark';
-    lightDark.innerHTML = `${theme} mode`;
+    lightDark.html(`${theme} mode`);
     toggle.prop('checked', lightTheme.matches);
     console.log(`Browser Pref: ${theme}`);
-    document.documentElement.setAttribute('data-theme', theme);
+    // document.documentElement.setAttribute('data-theme', theme);
+    $('html').attr('data-bs-theme', theme);
     localStorage.setItem('displayPref', theme);
   } else {
     // default to light
@@ -74,7 +76,8 @@ function loadTheme() {
     toggle.prop('checked', true);
     lightDark.html(`light mode`);
     console.log('Browser Pref: unknown');
-    document.documentElement.setAttribute('data-theme', 'light');
+    $('html').attr('data-bs-theme', 'light');
+    // document.documentElement.setAttribute('data-theme', 'light');
   }
 }
 
@@ -82,7 +85,8 @@ function setMode(input) {
   const theme = input.checked ? 'light' : 'dark';
   localStorage.setItem('displayPref', theme);
   lightDark.html(`${theme} mode`);
-  document.documentElement.setAttribute('data-theme', theme);
+  // document.documentElement.setAttribute('data-theme', theme);
+  $('html').attr('data-bs-theme', theme);
 }
 
 async function LoadCourse() {
@@ -125,7 +129,7 @@ async function idInput(value) {
         textBox.prop('disabled', false);
         ul.html('');
         response.forEach(function (itemText) {
-          let li = `<li><div><small>${itemText.date}</small></div><pre><p>${itemText.text}</p></pre></li>`;
+          let li = `<li class="list-group-item"><div><small>${itemText.date}</small></div><pre><p>${itemText.text}</p></pre></li>`;
           ul.append(li);
         });
       });

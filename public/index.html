@@ -16,85 +16,84 @@
     <!-- For the chrome flashbang -->
     <script>
       if (localStorage.getItem('displayPref')) {
-        document.documentElement.setAttribute(
-          'data-theme',
-          localStorage.getItem('displayPref')
-        );
+        $('html').attr('data-bs-theme', localStorage.getItem('displayPref'));
       } else {
         const theme = window.matchMedia('(prefers-color-scheme: light)').matches
           ? 'light'
           : 'dark';
-        document.documentElement.setAttribute('data-theme', theme);
+        $('html').attr('data-bs-theme', theme);
         localStorage.setItem('displayPref', theme);
       }
+      $(window).on("load", function() {
+        const theme = localStorage.getItem('displayPref') === 'light' ? true : false; 
+        $('#dark_light').prop('checked', theme);
+      });
     </script>
   </head>
-  <body" id="body">
-    <div id="topbar">
-      <img
-        src="https://www.uvu.edu/sbdc/images/logos/uvu-logo-green.png"
-        id="top-image"
-        class="topitem"
-      />
-      <a class="UVUtitle topitem" href="">Student Logs</a>
-      <span class="UVUtitle" id="lightordark">Light mode</span>
-      <label class="toggle">
-        <input
-          type="checkbox"
-          id="dark_light"
-          name="dark_light"
-          onchange="setMode(this)"
-        />
-        <span class="slider"></span>
-      </label>
-    </div>
-    <div id="container">
-      <form>
-        <label for="course">Select a course</label><br />
-        <select
-          aria-label="Select Course"
-          id="course"
-          name="course"
-          data-cy="course_select"
-          onchange="displayUVUID(value)"
-        ></select>
-        <br />
-        <label for="uvuId">UVU ID</label><br />
-
-        <!-- onput here makes it so only numbers are typed -->
-        <input
-          type="text"
-          id="uvuId"
-          name="uvuId"
-          data-cy="uvuId_input"
-          oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-          maxlength="8"
-          placeholder="10234567"
-        />
-
-        <h3 id="uvuIdDisplay" data-cy="uvuIdDisplay">Student Logs for</h3>
-        <ul data-cy="logs" id="logs" onclick="hideLog(this)" class="list"></ul>
-        <div id="bottom">
-          <label>New Log</label><br />
-          <textarea
-            style="height: 75px"
-            aria-label="add log textarea"
-            data-cy="log_textarea"
-            id="logText"
-            oninput="postLog()"
-          ></textarea
-          ><br />
-
-          <button
-            type="submit"
-            data-cy="add_log_btn"
-            onclick="submitButton(event)"
-            id="submit"
-          >
-            Add Log
-          </button>
+  <body" class="padding-top">
+    <nav class="navbar fixed-top bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="">
+          <img src="https://www.uvu.edu/sbdc/images/logos/uvu-logo-green.png" height="40" alt="UVU Logo" />
+        </a>
+        <span class="navbar-text">Student Logs</span>
+        <!-- <span class=" ms-auto" id="lightordark">Light mode</span> -->
+        <div class="form-check form-switch ms-auto">
+          <input class="form-check-input" type="checkbox" id="dark_light" name="dark_light" onchange="setMode(this)">
+          <label class="form-check-label me-2" id="lightordark" for="dark_light">Light mode</label>
         </div>
-      </form>
+      </div>
+    </nav>
+    <div class="d-flex justify-content-center align-items-center vh-100">
+      <div class="rounded card p-4 w-50 text-center">
+        <form class="d-flex flex-column gap-3">
+          <label for="course">Select a course</label><br />
+          <select
+            aria-label="Select Course"
+            id="course"
+            name="course"
+            data-cy="course_select"
+            onchange="displayUVUID(value)"
+          ></select>
+          <br />
+          <label for="uvuId">UVU ID</label><br />
+
+          <!-- onput here makes it so only numbers are typed -->
+          <input
+            type="text"
+            id="uvuId"
+            name="uvuId"
+            data-cy="uvuId_input"
+            oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+            maxlength="8"
+            placeholder="10234567"
+          />
+
+          <h3 id="uvuIdDisplay" data-cy="uvuIdDisplay">Student Logs for</h3>
+          <ul data-cy="logs" id="logs" onclick="hideLog(this)" class="list-group overflow-auto border" style="max-height: 30vh"></ul>
+          <div id="bottom">
+            <label class="p-2">New Log</label><br />
+            <textarea
+              style="height: 75px"
+              aria-label="add log textarea"
+              data-cy="log_textarea"
+              id="logText"
+              oninput="postLog()"
+            ></textarea
+            ><br />
+
+            <button
+              type="submit"
+              data-cy="add_log_btn"
+              onclick="submitButton(event)"
+              id="submit"
+              class="btn"
+            >
+              Add Log
+            </button>
+          </div>
+        </form>
+      </div>
       <script src="script.js"></script>
     </div>
   </body>
