@@ -7,10 +7,13 @@
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "ES6",
-    "target": "ES6",
+    "module": "commonjs",   // ← this
+    "target": "ES2020",
     "lib": ["ES6", "DOM"],
-    "types": ["jquery"],
+    "esModuleInterop": true,
+    "types": ["jquery", "node"],
+    "outDir": "./dist",
+    "rootDir": "./",
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
@@ -36,10 +39,19 @@
     // Recommended Options
     "strict": true,
     "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
-    "isolatedModules": true,
+    "verbatimModuleSyntax": false,
+    "isolatedModules": false,
     "noUncheckedSideEffectImports": true,
     "skipLibCheck": true,
-    
-  }
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node"
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

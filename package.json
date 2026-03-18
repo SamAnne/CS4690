@@ -3,14 +3,35 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "server": "json-server db.json --routes routes.json"
+    "build": "tsc && copyfiles -u 0 server/db/db.json dist/",
+    "watch": "tsc -w",
+    "prestart": "npm run build",
+    "start": "node ./dist/bin/www.js",
+    "dev": "npm run build && node ./dist/bin/www.js"
   },
   "devDependencies": {
+    "@types/async-lock": "^1.4.2",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/express": "^5.0.6",
+    "@types/http-errors": "^2.0.5",
     "@types/jquery": "^3.5.33",
-    "json-server": "0.17.0"
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^25.5.0",
+    "copyfiles": "^2.4.1",
+    "json-server": "0.17.0",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
+    "async-lock": "^1.4.1",
+    "body-parser": "^2.2.2",
+    "class-transformer": "^0.5.1",
+    "cookie-parser": "^1.4.7",
+    "express": "^5.2.1",
+    "http-errors": "^2.0.1",
+    "jade": "^1.11.0",
     "jquery": "^4.0.0",
-    "typescript": "^5.9.3"
+    "mongodb": "^7.1.0",
+    "morgan": "^1.10.1",
+    "reflect-metadata": "^0.2.2"
   }
 }

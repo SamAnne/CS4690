@@ -101,7 +101,7 @@ async function LoadCourse() {
       // default selected value
       var chooseOpt = `<option selected value="">Choose Courses</option>`;
       courseSelect.append(chooseOpt);
-
+      console.log(response);
       for (let option of response) {
         var opt = `<option value="${option.id}">${option.display}</option>`;
         courseSelect.append(opt);
