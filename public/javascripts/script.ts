@@ -103,7 +103,7 @@ async function LoadCourse() {
       courseSelect.append(chooseOpt);
       console.log(response);
       for (let option of response) {
-        var opt = `<option value="${option.id}">${option.display}</option>`;
+        var opt = `<option value="${option.Id}">${option.display}</option>`;
         courseSelect.append(opt);
       }
     });

@@ -90,7 +90,7 @@ function LoadCourse() {
                 var chooseOpt = `<option selected value="">Choose Courses</option>`;
                 courseSelect.append(chooseOpt);
                 for (let option of response) {
-                    var opt = `<option value="${option.id}">${option.display}</option>`;
+                    var opt = `<option value="${option.Id}">${option.display}</option>`;
                     courseSelect.append(opt);
                 }
             });
