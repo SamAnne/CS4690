@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npx tsc public/javascripts/script.ts --target ES2020 --skipLibCheck true --strict false",
     "watch": "tsc -w",
     "prestart": "npm run build",
     "start": "node ./dist/bin/www.js",

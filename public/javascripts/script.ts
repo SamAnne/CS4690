@@ -10,6 +10,7 @@ const ul: JQuery<HTMLUListElement> = $('#logs');
 const button: JQuery<HTMLButtonElement> = $('#submit');
 const textBox: JQuery<HTMLTextAreaElement> = $('#logText');
 const lightDark: JQuery<HTMLLabelElement> = $('#lightordark');
+const courseText: JQuery<HTMLInputElement> = $('#courseAdd');
 
 interface Logs {
   courseId: string;
@@ -94,7 +95,7 @@ function setMode(input: HTMLInputElement): void {
   $('html').attr('data-bs-theme', theme);
 }
 
-async function LoadCourse() {
+async function LoadCourse(): Promise<void> {
   try {
     await $.get('/courses', function(response){
       courseSelect.html('');
@@ -113,6 +114,23 @@ async function LoadCourse() {
   }
 }
 
+async function PostCourse(): Promise<void>{
+  console.log(courseText.val());
+  try {
+    await $.post('/courses', {
+        Id: courseText.val(),
+        display: courseText.val()
+      }, function(data, status) {
+        console.log(data);
+        console.log(status);
+        LoadCourse();
+      });
+  }
+  catch (error){
+    console.log(error);
+  }
+}
+
 function displayUVUID(value: HTMLSelectElement): void {
   if (value.value == '') {
     id.css('visibility', 'hidden');
@@ -125,11 +143,11 @@ function displayUVUID(value: HTMLSelectElement): void {
   }
 }
 
-async function idInput(value: string) {
+async function idInput(value: string): Promise<void> {
   $('#uvuIdDisplay').html(`Student Logs for ${value}`);
   if (value.length == 8) {
     try {
-      await $.get(`http://localhost:3000/logs?courseId=${courseSelect.val()}&uvuId=${id.val()}`, function(response){
+      await $.get(`/logs?courseId=${courseSelect.val()}&uvuId=${id.val()}`, function(response){
         button.prop('disabled', false);
         textBox.prop('disabled', false);
         ul.html('');
@@ -163,7 +181,7 @@ function hideLog(obj: HTMLUListElement): void {
   }
 }
 
-function postLog() {
+function postLog(): void {
   if (textBox.val() != '' && (id.val() as string).length == 8) {
     button.prop('disabled', false);
     textBox.prop('disabled', false);
@@ -178,7 +196,7 @@ async function submitButton(event: Event) {
   event.preventDefault();
   var now = new Date();
   try{
-    await $.post('http://localhost:3000/logs', {
+    await $.post('/logs', {
         courseId: courseSelect.val(),
         uvuId: id.val(),
         date: now.toLocaleString(),

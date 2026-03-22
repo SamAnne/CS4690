@@ -38,6 +38,18 @@ html(lang="en", data-theme="light")
     .d-flex.justify-content-center.align-items-center.vh-100
       .rounded.card.p-4.w-50.text-center
         form.d-flex.flex-column.gap-3
+          label(for="courseAdd") Add a course
+          br
+          input(
+            type="text"
+            id="courseAdd",
+            name="courseAdd"
+          )
+          button.btn.btn-outline-secondary(
+            type="button",
+            onclick="PostCourse()",
+            id="submitCourse"
+          ) Add Course
           label(for="course") Select a course
           br
           select(
@@ -73,7 +85,7 @@ html(lang="en", data-theme="light")
               oninput="postLog()"
             )
             br
-            button.btn(
+            button.btn.btn-outline-secondary(
               type="submit",
               data-cy="add_log_btn",
               onclick="submitButton(event)",
