@@ -8,6 +8,9 @@ import logger from 'morgan';
 import indexRouter from './server/routes/index';
 import logsRouter from './server/routes/logs';
 import coursesRouter from './server/routes/courses';
+import { connectDb } from './server/db/connection';
+
+connectDb();
 
 const app: Express = express();
 
