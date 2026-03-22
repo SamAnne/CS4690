@@ -1,6 +1,6 @@
-import type { IRepository } from "./IRepository";
-import type { IEntity } from "../models/IEntity";
-import { getDb } from "./connection";
+import type { IRepository } from './IRepository';
+import type { IEntity } from '../models/IEntity';
+import { Model } from 'mongoose';
 
 function generateUUIDv4(): string {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
@@ -11,43 +11,30 @@ function generateUUIDv4(): string {
 }
 
 class Repository<T extends IEntity> implements IRepository<T> {
-    protected entityClass: new (...args: any[]) => T;
+    private model: Model<any>;
 
-    protected get collectionName(): string {
-        return `${this.entityClass.name.toLowerCase()}s`;
-        // Log → "logs", Course → "courses"
-    }
-
-    public constructor(entityClass: new (...args: any[]) => T) {
-        this.entityClass = entityClass;
+    public constructor(model: Model<any>) {
+        this.model = model;
     }
 
     public async save(t: T): Promise<T> {
-        const db = await getDb();
-        const collection = db.collection(this.collectionName);
-
-        // Generate Id if it's a new record
         if (!t.Id) {
             t.Id = generateUUIDv4();
         }
 
         // upsert — insert if new, update if exists
-        await collection.replaceOne(
+        await this.model.findOneAndReplace(
             { Id: t.Id },
-            { ...t as any },
-            { upsert: true }
+            t,
+            { upsert: true, new: true }
         );
 
-        console.log(`✅ Saved ${JSON.stringify(t)} to ${this.collectionName}`);
+        console.log(`✅ Saved to ${this.model.modelName}`);
         return t;
     }
 
     public async get(filters?: Map<string, string>): Promise<Array<T>> {
-        console.log('📦 Fetching from MongoDB');
-        const db = await getDb();
-        const collection = db.collection(this.collectionName);
-
-        // Convert filters Map to a MongoDB query object
+        // convert filters Map to plain object for Mongoose query
         const query: Record<string, string> = {};
         if (filters && filters.size > 0) {
             for (const [key, value] of filters.entries()) {
@@ -55,9 +42,8 @@ class Repository<T extends IEntity> implements IRepository<T> {
             }
         }
 
-        console.log(`Query: ${JSON.stringify(query)}`);
-        const results = await collection.find(query).toArray();
-        console.log(`Found ${results.length} results`);
+        console.log(`📦 Querying ${this.model.modelName} with`, query);
+        const results = await this.model.find(query).lean();
         return results as unknown as T[];
     }
 }
