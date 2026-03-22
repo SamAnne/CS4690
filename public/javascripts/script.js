@@ -1,16 +1,6 @@
-"use strict";
 // DONE: Wire up the app's behavior here.
 // NOTE: The TODOs are listed in index.html
 // npm run 
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 const toggle = $('#dark_light');
 const courseSelect = $('#course');
 const id = $('#uvuId');
@@ -18,6 +8,7 @@ const ul = $('#logs');
 const button = $('#submit');
 const textBox = $('#logText');
 const lightDark = $('#lightordark');
+const courseText = $('#courseAdd');
 $(window).on("load", function () {
     id.on('input', function () {
         idInput(this.value);
@@ -81,24 +72,39 @@ function setMode(input) {
     lightDark.html(`${theme} mode`);
     $('html').attr('data-bs-theme', theme);
 }
-function LoadCourse() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            yield $.get('/courses', function (response) {
-                courseSelect.html('');
-                // default selected value
-                var chooseOpt = `<option selected value="">Choose Courses</option>`;
-                courseSelect.append(chooseOpt);
-                for (let option of response) {
-                    var opt = `<option value="${option.Id}">${option.display}</option>`;
-                    courseSelect.append(opt);
-                }
-            });
-        }
-        catch (error) {
-            console.log(error);
-        }
-    });
+async function LoadCourse() {
+    try {
+        await $.get('/courses', function (response) {
+            courseSelect.html('');
+            // default selected value
+            var chooseOpt = `<option selected value="">Choose Courses</option>`;
+            courseSelect.append(chooseOpt);
+            console.log(response);
+            for (let option of response) {
+                var opt = `<option value="${option.Id}">${option.display}</option>`;
+                courseSelect.append(opt);
+            }
+        });
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+async function PostCourse() {
+    console.log(courseText.val());
+    try {
+        await $.post('/courses', {
+            Id: courseText.val(),
+            display: courseText.val()
+        }, function (data, status) {
+            console.log(data);
+            console.log(status);
+            LoadCourse();
+        });
+    }
+    catch (error) {
+        console.log(error);
+    }
 }
 function displayUVUID(value) {
     if (value.value == '') {
@@ -112,32 +118,30 @@ function displayUVUID(value) {
         idInput(id.val());
     }
 }
-function idInput(value) {
-    return __awaiter(this, void 0, void 0, function* () {
-        $('#uvuIdDisplay').html(`Student Logs for ${value}`);
-        if (value.length == 8) {
-            try {
-                yield $.get(`http://localhost:3000/logs?courseId=${courseSelect.val()}&uvuId=${id.val()}`, function (response) {
-                    button.prop('disabled', false);
-                    textBox.prop('disabled', false);
-                    ul.html('');
-                    response.forEach(function (itemText) {
-                        let li = `<li class="list-group-item"><div><small>${itemText.date}</small></div><pre><p>${itemText.text}</p></pre></li>`;
-                        ul.append(li);
-                    });
+async function idInput(value) {
+    $('#uvuIdDisplay').html(`Student Logs for ${value}`);
+    if (value.length == 8) {
+        try {
+            await $.get(`/logs?courseId=${courseSelect.val()}&uvuId=${id.val()}`, function (response) {
+                button.prop('disabled', false);
+                textBox.prop('disabled', false);
+                ul.html('');
+                response.forEach(function (itemText) {
+                    let li = `<li class="list-group-item"><div><small>${itemText.date}</small></div><pre><p>${itemText.text}</p></pre></li>`;
+                    ul.append(li);
                 });
-            }
-            catch (error) {
-                console.log(error);
-            }
+            });
         }
-        else {
-            // clear logs and disable button because its an invalid uvuId
-            ul.html('');
-            button.prop('disabled', true);
-            textBox.prop('disabled', true);
+        catch (error) {
+            console.log(error);
         }
-    });
+    }
+    else {
+        // clear logs and disable button because its an invalid uvuId
+        ul.html('');
+        button.prop('disabled', true);
+        textBox.prop('disabled', true);
+    }
 }
 // hide each comment when clicking
 function hideLog(obj) {
@@ -162,27 +166,24 @@ function postLog() {
         textBox.prop('disabled', true);
     }
 }
-function submitButton(event) {
-    return __awaiter(this, void 0, void 0, function* () {
-        // to prevent it from refreshing
-        event.preventDefault();
-        var now = new Date();
-        try {
-            yield $.post('http://localhost:3000/logs', {
-                courseId: courseSelect.val(),
-                uvuId: id.val(),
-                date: now.toLocaleString(),
-                text: textBox.val(),
-            }, function (data, status) {
-                console.log(data);
-                console.log(status);
-            });
-        }
-        catch (error) {
-            console.log(error);
-        }
-        // added this line to fix the error in my project 1
-        idInput(id.val());
-    });
+async function submitButton(event) {
+    // to prevent it from refreshing
+    event.preventDefault();
+    var now = new Date();
+    try {
+        await $.post('/logs', {
+            courseId: courseSelect.val(),
+            uvuId: id.val(),
+            date: now.toLocaleString(),
+            text: textBox.val(),
+        }, function (data, status) {
+            console.log(data);
+            console.log(status);
+        });
+    }
+    catch (error) {
+        console.log(error);
+    }
+    // added this line to fix the error in my project 1
+    idInput(id.val());
 }
-//# sourceMappingURL=script.js.map
