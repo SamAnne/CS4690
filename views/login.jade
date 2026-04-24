@@ -1,0 +1,42 @@
+extends layout
+
+block content 
+  .d-flex.justify-content-center.align-items-center.vh-100
+    .rounded.card.p-4.w-50.text-center
+      form#loginForm(method='POST', action='/login' novalidate).d-flex.flex-column.gap-3
+        if error
+          .alert.alert-danger= error
+        h1 Login
+        label(for="username") Username
+        br
+        input(
+          type="text"
+          id="username",
+          name="username",
+          required
+        )
+        label(for="password") Password
+        br
+        input(
+          type="password"
+          id="password",
+          name="password",
+          required
+        )
+        br
+        button.btn.btn-outline-secondary(
+          type="submit",
+          data-cy="",
+          id="login"
+        ) Login
+        a.text-decoration-none(href="/signup") Sign Up
+block scripts 
+    script.
+        const form = document.getElementById('loginForm');
+        form.addEventListener('submit', function(e) {
+        if (!form.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        form.classList.add('was-validated');
+        });

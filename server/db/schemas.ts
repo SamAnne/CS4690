@@ -15,7 +15,15 @@ const courseSchema = new mongoose.Schema({
     display: { type: String, required: true }
 });
 
+const userSchema = new mongoose.Schema({
+    Id:             { type: String, required: true},
+    Username:       { type: String, required: true},
+    PasswordHash:   { type: String, required: true},
+    Role:           { type: String, required: true}
+});
+
 const LogModel     = mongoose.model('log', logSchema);
 const CourseModel  = mongoose.model('course', courseSchema);
+const UserModel    = mongoose.model('user', userSchema);
 
-export { LogModel, CourseModel };
+export { LogModel, CourseModel, UserModel};
