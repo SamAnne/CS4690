@@ -3,13 +3,12 @@
 // npm run 
 
 
-const toggle: JQuery<HTMLInputElement> = $('#dark_light');
+
 const courseSelect: JQuery<HTMLSelectElement> = $('#course');
 const id: JQuery<HTMLInputElement> = $('#uvuId');
 const ul: JQuery<HTMLUListElement> = $('#logs');
 const button: JQuery<HTMLButtonElement> = $('#submit');
 const textBox: JQuery<HTMLTextAreaElement> = $('#logText');
-const lightDark: JQuery<HTMLLabelElement> = $('#lightordark');
 const courseText: JQuery<HTMLInputElement> = $('#courseAdd');
 
 interface Logs {
@@ -24,12 +23,6 @@ $(window).on("load", function() {
   id.on('input', function(this: HTMLInputElement) {
     idInput(this.value);
   });
-  // this line is why it didn't work for the AI in class
-  // because the listener was on a const variable instead
-  // of on the window.matchMedia itself (I think)
-  window
-    .matchMedia('(prefers-color-scheme: dark)')
-    .addEventListener('change', changeTheme);
 
   id.css('visibility','hidden');
   button.prop('disabled', true);
@@ -37,63 +30,8 @@ $(window).on("load", function() {
 
   ul.css('max-height', '30vh');
 
-  loadTheme();
   LoadCourse();
 });
-
-function changeTheme(): void {
-  const darkTheme = window.matchMedia('(prefers-color-scheme: dark)');
-  const lightTheme = window.matchMedia('(prefers-color-scheme: light)');
-
-  if (lightTheme.matches || darkTheme.matches) {
-    const theme = lightTheme.matches ? 'light' : 'dark';
-    $('html').attr('data-theme', theme);
-    //document.documentElement.setAttribute('data-theme', theme);
-    lightDark.html(`${theme} mode`);
-    localStorage.setItem('displayPref', theme);
-  }
-}
-
-function loadTheme(): void {
-  const darkTheme = window.matchMedia('(prefers-color-scheme: dark)');
-  const lightTheme = window.matchMedia('(prefers-color-scheme: light)');
-  const print =
-    localStorage.getItem('displayPref') === null
-      ? 'User Pref: unknown'
-      : 'User Pref: ' + localStorage.getItem('displayPref');
-  console.log(print);
-
-  if (localStorage.getItem('displayPref')) {
-    $('html').attr('data-bs-theme', localStorage.getItem('displayPref'));
-    toggle.prop('checked',
-      localStorage.getItem('displayPref') === 'light' ? true : false);
-
-    lightDark.html(`${localStorage.getItem(
-      'displayPref'
-    )} mode`);
-  } else if (lightTheme.matches || darkTheme.matches) {
-    const theme = lightTheme.matches ? 'light' : 'dark';
-    lightDark.html(`${theme} mode`);
-    toggle.prop('checked', lightTheme.matches);
-    console.log(`Browser Pref: ${theme}`);
-    $('html').attr('data-bs-theme', theme);
-    localStorage.setItem('displayPref', theme);
-  } else {
-    // default to light
-    localStorage.setItem('displayPref', 'light');
-    toggle.prop('checked', true);
-    lightDark.html(`light mode`);
-    console.log('Browser Pref: unknown');
-    $('html').attr('data-bs-theme', 'light');
-  }
-}
-
-function setMode(input: HTMLInputElement): void {
-  const theme = input.checked ? 'light' : 'dark';
-  localStorage.setItem('displayPref', theme);
-  lightDark.html(`${theme} mode`);
-  $('html').attr('data-bs-theme', theme);
-}
 
 async function LoadCourse(): Promise<void> {
   try {

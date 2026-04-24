@@ -1,77 +1,22 @@
 // DONE: Wire up the app's behavior here.
 // NOTE: The TODOs are listed in index.html
 // npm run 
-const toggle = $('#dark_light');
 const courseSelect = $('#course');
 const id = $('#uvuId');
 const ul = $('#logs');
 const button = $('#submit');
 const textBox = $('#logText');
-const lightDark = $('#lightordark');
 const courseText = $('#courseAdd');
 $(window).on("load", function () {
     id.on('input', function () {
         idInput(this.value);
     });
-    // this line is why it didn't work for the AI in class
-    // because the listener was on a const variable instead
-    // of on the window.matchMedia itself (I think)
-    window
-        .matchMedia('(prefers-color-scheme: dark)')
-        .addEventListener('change', changeTheme);
     id.css('visibility', 'hidden');
     button.prop('disabled', true);
     textBox.prop('disabled', true);
     ul.css('max-height', '30vh');
-    loadTheme();
     LoadCourse();
 });
-function changeTheme() {
-    const darkTheme = window.matchMedia('(prefers-color-scheme: dark)');
-    const lightTheme = window.matchMedia('(prefers-color-scheme: light)');
-    if (lightTheme.matches || darkTheme.matches) {
-        const theme = lightTheme.matches ? 'light' : 'dark';
-        $('html').attr('data-theme', theme);
-        //document.documentElement.setAttribute('data-theme', theme);
-        lightDark.html(`${theme} mode`);
-        localStorage.setItem('displayPref', theme);
-    }
-}
-function loadTheme() {
-    const darkTheme = window.matchMedia('(prefers-color-scheme: dark)');
-    const lightTheme = window.matchMedia('(prefers-color-scheme: light)');
-    const print = localStorage.getItem('displayPref') === null
-        ? 'User Pref: unknown'
-        : 'User Pref: ' + localStorage.getItem('displayPref');
-    console.log(print);
-    if (localStorage.getItem('displayPref')) {
-        $('html').attr('data-bs-theme', localStorage.getItem('displayPref'));
-        toggle.prop('checked', localStorage.getItem('displayPref') === 'light' ? true : false);
-        lightDark.html(`${localStorage.getItem('displayPref')} mode`);
-    }
-    else if (lightTheme.matches || darkTheme.matches) {
-        const theme = lightTheme.matches ? 'light' : 'dark';
-        lightDark.html(`${theme} mode`);
-        toggle.prop('checked', lightTheme.matches);
-        console.log(`Browser Pref: ${theme}`);
-        $('html').attr('data-bs-theme', theme);
-        localStorage.setItem('displayPref', theme);
-    }
-    else {
-        // default to light
-        localStorage.setItem('displayPref', 'light');
-        toggle.prop('checked', true);
-        lightDark.html(`light mode`);
-        console.log('Browser Pref: unknown');
-        $('html').attr('data-bs-theme', 'light');
-    }
-}
-function setMode(input) {
-    const theme = input.checked ? 'light' : 'dark';
-    localStorage.setItem('displayPref', theme);
-    lightDark.html(`${theme} mode`);
-    $('html').attr('data-bs-theme', theme);
-}
 async function LoadCourse() {
     try {
         await $.get('/courses', function (response) {
