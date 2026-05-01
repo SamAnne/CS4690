@@ -1,36 +1,24 @@
 extends layout
 
-block content 
+block content
   .d-flex.justify-content-center.align-items-center.vh-100
     .rounded.card.p-4.w-50.text-center
-      form#loginForm(method='POST', action='/login' novalidate).d-flex.flex-column.gap-3
+      if school === 'uvu'
+        img(src="https://www.uvu.edu/sbdc/images/logos/uvu-logo-green.png", height="150", alt="UVU").mb-1
+        h5.fw-bold Utah Valley University
+      else if school === 'uofu'
+        img(src="https://logos-world.net/wp-content/uploads/2023/05/University-of-Utah-Logo.png", height="150", alt="UofU").mb-3
+        h3.fw-bold University of Utah
+      form#loginForm(method='POST', action='/#{school}/login' novalidate).d-flex.flex-column.gap-3
         if error
           .alert.alert-danger= error
-        h1 Login
-        label(for="username") Username
-        br
-        input(
-          type="text"
-          id="username",
-          name="username",
-          required
-        )
-        label(for="password") Password
-        br
-        input(
-          type="password"
-          id="password",
-          name="password",
-          required
-        )
-        br
-        button.btn.btn-outline-secondary(
-          type="submit",
-          data-cy="",
-          id="login"
-        ) Login
-        a.text-decoration-none(href="/signup") Sign Up
-block scripts 
+        h3 Login
+        label(for="username").text-start Username
+        input(type="text", id="username", name="username", required).form-control
+        label(for="password").text-start Password
+        input(type="password", id="password", name="password", required).form-control
+        button.btn.btn-primary(type="submit") Login
+        a.text-decoration-none(href="/#{school}/signup") Sign Up
     script.
         const form = document.getElementById('loginForm');
         form.addEventListener('submit', function(e) {

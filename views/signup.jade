@@ -1,56 +1,30 @@
 extends layout
 
-block content 
+block content
   .d-flex.justify-content-center.align-items-center.vh-100
     .rounded.card.p-4.w-50.text-center
-      form#signupForm(method='POST', action='/signup' novalidate).d-flex.flex-column.gap-3
+      if school === 'uvu'
+        img(src="https://www.uvu.edu/sbdc/images/logos/uvu-logo-green.png", height="150", alt="UVU").mb-3
+        h5.fw-bold Utah Valley University
+      else if school === 'uofu'
+        img(src="https://communications.utah.edu/wp-content/uploads/2022/08/ULogoUofU_Red_RGB.png", height="150", alt="UofU").mb-3
+        h5.fw-bold University of Utah
+      form#signupForm(method='POST', action='/#{school}/signup' novalidate).d-flex.flex-column.gap-3
         if error
-            .alert.alert-danger= error
-        h1 Sign up
-        label(for="username") Username
-        br
-        input#username(
-          type="text",
-          name="username",
-          required,
-          minlength='3'
-        )
-        .invalid-feedback Username is required
+          .alert.alert-danger= error
+        h1 Sign Up
+        label(for="username") UVU ID
+        input#username(type="text", name="username", required, minlength='8', maxlength='8').form-control
         label(for="password") Password
-        br
-        input#password(
-          type="password",
-          name="password",
-          required,
-          minlength='6'
-        )
-        .invalid-feedback Password must be at least 6 characters
-        br
-        label(for="") Choose your role
+        input#password(type="password", name="password", required, minlength='6').form-control
+        label Choose your role
         .form-check
-            input#student.form-check-input(
-                type="radio",
-                value='student',
-                name="role",
-                required,
-                checked
-            )
-            label.form-check-label(
-                for="student"
-            ) Student
-        .form-check    
-            input#teacher.form-check-input(
-                type="radio",
-                value='teacher',
-                name="role"
-            )
-            label.form-check-label(
-                for="teacher"
-            ) Teacher
-        button#signup.btn.btn-outline-secondary(
-          type="submit",
-          data-cy="",
-        ) Sign Up
+          input#student.form-check-input(type="radio", value='student', name="role", required, checked)
+          label.form-check-label(for="student") Student
+        .form-check
+          input#teacher.form-check-input(type="radio", value='teacher', name="role")
+          label.form-check-label(for="teacher") Teacher
+        button#signup.btn.btn-primary(type="submit") Sign Up
 block scripts 
     script.
         const form = document.getElementById('signupForm');

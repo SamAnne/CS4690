@@ -1,0 +1,334 @@
+extends layout
+
+block content
+    .container.mt-5.pt-5
+        .d-flex.align-items-center.justify-content-between.mb-3
+        div
+            h2.mb-0 Dashboard
+            span.text-muted Hi, #{user.username}
+        div
+            ul.nav.nav-tabs.mt-3
+                li.nav-item
+                    a.nav-link.active(data-bs-toggle='tab', href='#logs') Logs
+                if user.role === 'TA' || user.role === 'teacher' || user.role === 'admin'
+                    li.nav-item
+                        a.nav-link(data-bs-toggle='tab', href='#add-student') Add User
+                if user.role === 'teacher' || user.role === 'admin'
+                    li.nav-item
+                        a.nav-link(data-bs-toggle='tab', href='#add-course') Add Course
+                    
+            .tab-content.mt-3
+                #logs.tab-pane.fade.show.active
+                    if user.role === 'student'
+                        #courseAddAlert
+                        h5 Add a Course 
+                        select#availSelect.form-select
+                            option(value='') Select a course...
+                        button.btn.btn-secondary.mt-2(onclick='addAvailCourse()') Add Course
+                        hr
+                    
+                    select#courseSelect.form-select
+                        option(value='') Select a course...
+                    table#logsTable.table.mt-3
+                        thead
+                            tr
+                                th ID
+                                th Course
+                                th Date
+                                th Log
+                        tbody#logsBody
+                    #logErrors
+
+                    .mt-4.pt-2.border-top
+                        h6 New Log
+                        #logAlert
+                        textarea#logText.form-control(placeholder='Write your log entry...', rows='3')
+                        button.btn.btn-primary.mt-2(onclick='submitLog()') Submit Log
+
+                #add-course.tab-pane.fade
+                    .p-4
+                        h5 Add Course
+                        #courseAlert
+                        .mb-3
+                            label.form-label Course Name
+                            input#courseName.form-control(type='text', placeholder='CS 4690')
+                        button.btn.btn-primary(onclick='addCourse()') Add Course
+
+                #add-student.tab-pane.fade
+                    .p-4
+                        h5 Add User to Course
+                        #userAlert
+                        .mb-3
+                            select#userSelect.form-select
+                                option(value='') Select type of User...
+                                if user.role === 'TA' || user.role === 'teacher' || user.role === 'admin'
+                                    option(value='student') Student
+                                if user.role === 'teacher' || user.role === 'admin'
+                                    option(value='TA') TA
+                                if user.role === 'admin'
+                                    option(value='teacher') Teacher
+                        .mb-3
+                            label.form-label Student ID
+                            input#studentUvuId.form-control(type='text', placeholder='a02345678')
+                        .mb-3
+                            label.form-label Course
+                            select#userCourse.form-select
+                                option(value='') Select a course...
+                        button.btn.btn-secondary(onclick='addUser()') Add User
+
+
+
+block scripts
+    script.
+        // on page load get courses and populate dropdown
+        $(document).ready(async function() {
+            const school = '#{user.school}';
+            await $.get(`/${school}/dashboard/courses`, function(response) {
+                console.log(response.courses);
+                const role = '#{user.role}';
+                response.courses.forEach(course => {
+                    if (role !== 'TA'){
+                        $('#userCourse').append(`<option value="${course.Id}">${course.display}</option>`);
+                    }
+                    $('#courseSelect').append(`<option value="${course.Id}">${course.display}</option>`);             
+                });
+                console.log(response.coursesTA);
+                response.coursesTA.forEach(course => {
+                    $('#courseSelect').append(`<option value="${course.Id}">${course.display}</option>`);
+                    $('#userCourse').append(`<option value="${course.Id}">${course.display}</option>`);
+                });
+            });
+
+            await $.get(`/${school}/dashboard/courses-available`, function(courses) {
+                console.log(courses);
+                courses.forEach(course => {
+                    $('#availSelect').append(`<option value="${course.Id}">${course.display}</option>`);           
+                });
+            });
+        });
+
+        function renderLogs(logs) {
+            const role = '#{user.role}';
+            const username = '#{user.username}';
+            
+            $('#logsBody').empty();
+            if (!logs.length) {
+                $('#logsBody').append('<tr><td colspan="5">No logs found</td></tr>');
+                return;
+            }
+            logs.forEach(log => {
+                const canEdit = role === 'admin' || (role === 'student' && log.uvuId === username);
+                const canDelete = role === 'admin' || role === 'teacher' || (role === 'student' && log.uvuId === username);
+
+                $('#logsBody').append(`
+                    <tr id="row-${log._id}">
+                        <td>${log.uvuId}</td>
+                        <td>${log.courseId}</td>
+                        <td>${log.date}</td>
+                        <td>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span id="text-${log._id}">${log.text}</span>
+                                <div class="ms-2 text-nowrap">
+                                    ${canEdit ? `<button class="btn btn-sm btn-warning me-1" onclick="editLog('${log._id}')">Edit</button>` : ''}
+                                    ${canDelete ? `<button class="btn btn-sm btn-danger" onclick="deleteLog('${log._id}')">X</button>` : ''}
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `);
+            });
+        }
+
+        // when user selects a course fetch logs for that course
+        $('#courseSelect').on('change', async function() {
+            const course = $(this).val();
+            if (!course) {
+                $('#logsBody').empty();
+                return;
+            }
+            const school = '#{user.school}';
+            await $.get(`/${school}/dashboard/logs`, { course: course }, function(logs) {
+                renderLogs(logs);
+            });
+        });
+
+        function addAvailCourse(){
+            const school = '#{user.school}';
+            $.post(`/${school}/dashboard/add-course`, {
+                Id: $('#availSelect').val(),
+                display: $('#availSelect').text()
+            }, function(response) {
+                console.log(response);
+                showAlert('courseAddAlert', `Course "${response.display}" added successfully!`);
+                $('#courseSelect').append(
+                    `<option value="${response.Id}">${response.display}</option>`
+                );
+                $('#courseName').val('');
+                $('#userCourse').append(
+                    `<option value="${response.Id}">${response.display}</option>`
+                );
+                $('#studentCourse').val('');
+            })
+            .fail(function() {
+                showAlert('courseAddAlert', 'Failed to add course. Please try again.', false);
+            });
+        }
+
+        function addCourse() {
+            const school = '#{user.school}';
+            $.post(`/${school}/dashboard/add-course`, {
+                Id: $('#courseName').val().toLowerCase().replace(/\s+/g, ''),
+                display: $('#courseName').val()
+            }, function(response) {
+                console.log(response);
+                showAlert('courseAlert', `Course "${response.display}" added successfully!`);
+                $('#courseSelect').append(
+                    `<option value="${response.Id}">${response.display}</option>`
+                );
+                $('#courseName').val('');
+                $('#userCourse').append(
+                    `<option value="${response.Id}">${response.display}</option>`
+                );
+                $('#studentCourse').val('');
+            })
+            .fail(function() {
+                showAlert('courseAlert', 'Failed to add course. Please try again.', false);
+            });
+        }
+
+        function addUser(){
+            const user = $('#userSelect').val();
+            console.log(user);
+            if (user === 'student'){
+                addStudent();
+            } else if (user === 'TA'){
+                addTA();
+            } else if (user === 'teacher'){
+                addTeacher();
+            }
+        }
+        
+        function addTeacher(){
+            const school = '#{user.school}';
+            $.post(`/${school}/dashboard/add-teacher`, {
+                uvuId: $('#studentUvuId').val(),
+                courseId: $('#userCourse').val()
+            }, function(response) {
+                showAlert('userAlert', `Teacher added to course successfully!`);
+                $('#studentUvuId').val('');
+            })
+            .fail(function() {
+                showAlert('userAlert', 'User not found. Check the ID.', false);
+            });
+        }
+
+        function addTA(){
+            const school = '#{user.school}';
+            $.post(`/${school}/dashboard/add-TA`, {
+                uvuId: $('#studentUvuId').val(),
+                courseId: $('#userCourse').val()
+            }, function(response) {
+                showAlert('userAlert', `TA added to course successfully!`);
+                $('#studentUvuId').val('');
+            })
+            .fail(function() {
+                showAlert('userAlert', 'User not found. Check the ID.', false);
+            });
+        }
+
+        function addStudent() {
+            const school = '#{user.school}';
+            $.post(`/${school}/dashboard/add-student`, {
+                uvuId: $('#studentUvuId').val(),
+                courseId: $('#userCourse').val()
+            }, function(response) {
+                showAlert('userAlert', `Student added to course successfully!`);
+                $('#studentUvuId').val('');
+            })
+            .fail(function() {
+                showAlert('userAlert', 'Student not found. Check the ID.', false);
+            });
+        }
+
+        function showAlert(elementId, message, success = true) {
+            const type = success ? 'success' : 'danger';
+            $(`#${elementId}`).html(`
+                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `);
+        }
+
+        // create log
+        function submitLog() {
+            const school = '#{user.school}';
+            const course = $('#courseSelect').val();
+            const text = $('#logText').val().trim();
+
+            if (!course) {
+                showAlert('logAlert', 'Please select a course before submitting a log.', false);
+                return;
+            }
+
+            if (!text) {
+                showAlert('logAlert', 'Please write something in the log before submitting.', false);
+                return;
+            }
+
+            $.post(`/${school}/dashboard/logs`, {
+                courseId: course,
+                text: text
+            }, function(response) {
+                $('#logText').val('');
+                showAlert('logAlert', 'Log submitted successfully!');
+                $('#courseSelect').trigger('change');
+            }).fail(function() {
+                showAlert('logAlert', 'Failed to save log.', false);
+            });
+        }
+
+        // edit log
+        function editLog(id) {
+            const currentText = $(`#text-${id}`).text();
+            $(`#text-${id}`).html(`
+                <input class="form-control" id="edit-${id}" value="${currentText}">
+                <button class="btn btn-sm btn-success mt-1" onclick="saveLog('${id}')">Save</button>
+                <button class="btn btn-sm btn-secondary mt-1" onclick="cancelEdit('${id}', '${currentText}')">Cancel</button>
+            `);
+        }
+
+        function cancelEdit(id, originalText) {
+            $(`#text-${id}`).text(originalText);
+        }
+
+        function saveLog(id) {
+            const school = '#{user.school}';
+            const text = $(`#edit-${id}`).val();
+            $.ajax({
+                url: `/${school}/dashboard/logs/${id}`,
+                method: 'PUT',
+                data: { text },
+                success: function(response) {
+                    $(`#text-${id}`).text(response.text);
+                },
+                error: function() {
+                    showAlert('logErrors', 'Failed to update log.', false);
+                }
+            });
+        }
+
+        // delete log
+        function deleteLog(id) {
+            const school = '#{user.school}';
+            $.ajax({
+                url: `/${school}/dashboard/logs/${id}`,
+                method: 'DELETE',
+                success: function() {
+                    $(`#row-${id}`).remove();
+                },
+                error: function() {
+                    showAlert('logErrors', 'Failed to delete log.', false);
+                }
+            });
+        }

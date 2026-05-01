@@ -27,11 +27,14 @@ function loadTheme() {
     if (localStorage.getItem('displayPref')) {
         $('html').attr('data-bs-theme', localStorage.getItem('displayPref'));
         toggle.prop('checked', localStorage.getItem('displayPref') === 'light' ? true : false);
-        lightDark.html(`${localStorage.getItem('displayPref')} mode`);
+        let str = localStorage.getItem('displayPref');
+        const capitalized = str.charAt(0).toUpperCase() + str.slice(1);
+        lightDark.html(`${capitalized} mode`);
     }
     else if (lightTheme.matches || darkTheme.matches) {
         const theme = lightTheme.matches ? 'light' : 'dark';
-        lightDark.html(`${theme} mode`);
+        const capitalized = theme.charAt(0).toUpperCase() + theme.slice(1);
+        lightDark.html(`${capitalized} mode`);
         toggle.prop('checked', lightTheme.matches);
         console.log(`Browser Pref: ${theme}`);
         $('html').attr('data-bs-theme', theme);
@@ -41,14 +44,15 @@ function loadTheme() {
         // default to light
         localStorage.setItem('displayPref', 'light');
         toggle.prop('checked', true);
-        lightDark.html(`light mode`);
+        lightDark.html(`Light mode`);
         console.log('Browser Pref: unknown');
         $('html').attr('data-bs-theme', 'light');
     }
 }
 function setMode(input) {
     const theme = input.checked ? 'light' : 'dark';
+    const capitalized = theme.charAt(0).toUpperCase() + theme.slice(1);
     localStorage.setItem('displayPref', theme);
-    lightDark.html(`${theme} mode`);
+    lightDark.html(`${capitalized} mode`);
     $('html').attr('data-bs-theme', theme);
 }

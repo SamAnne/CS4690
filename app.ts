@@ -5,17 +5,18 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import jwt from 'jsonwebtoken';
+import { requireAuth, requireRole } from './server/routes/roles';
 
 import indexRouter from './server/routes/index';
 import logsRouter from './server/routes/logs';
 import coursesRouter from './server/routes/courses';
 import loginRouter from './server/routes/login';
 import signupRouter from './server/routes/signup';
-import { connectDb } from './server/db/connection';
+import dashboardRouter from './server/routes/dashboard';
 
-connectDb();
 
 const app: Express = express();
+const VALID_SCHOOLS = ['uvu', 'uofu'];
 
 // view engine setup
 app.set('../views', path.join(__dirname, 'views'));
@@ -32,20 +33,43 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     const token = req.cookies.token;
     if (token) {
         try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+            const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as any;
             res.locals.user = decoded;
+            res.locals.school = decoded.school;
         } catch {
             res.locals.user = null;
+            res.locals.school = null;
         }
+    } else {
+        res.locals.school = null;
     }
     next();
 });
 
+
 app.use('/', indexRouter);
-app.use('/logs', logsRouter);
-app.use('/courses', coursesRouter);
-app.use('/login', loginRouter);
-app.use('/signup', signupRouter); 
+
+// school-specific routes
+app.use('/:school', function(req: Request, res: Response, next: NextFunction) {
+    const school = req.params.school as string;
+    if (VALID_SCHOOLS.includes(school)) {
+        res.locals.school = school;
+        next();
+    } else {
+        next(); // not a school route
+    }
+});
+
+app.get('/:school/logout', function(req: Request, res: Response) {
+    res.clearCookie('token');
+    const school = req.params.school;
+    res.redirect(`/${school}/login`);
+});
+
+app.use('/:school/login', loginRouter);
+app.use('/:school/signup', signupRouter);
+app.use('/:school/dashboard', requireAuth, dashboardRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req: Request, res: Response, next: NextFunction) {

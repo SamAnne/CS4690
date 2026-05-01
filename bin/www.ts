@@ -1,5 +1,7 @@
 #!/usr/bin/env node
+import { connectDb } from '../server/db/connection';
 
+connectDb();
 /**
  * Module dependencies.
  */

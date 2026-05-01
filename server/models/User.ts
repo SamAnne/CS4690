@@ -5,6 +5,8 @@ class User extends Entity {
     private username: string = "";
     private passwordHash: string = "";
     private role: Role = Role.Student;
+    private courses: string[] = [];
+    private coursesTA: string[] = [];
 
     constructor(_id: string = "", username: string, passwordHash: string, role: Role) {
         super(_id);
