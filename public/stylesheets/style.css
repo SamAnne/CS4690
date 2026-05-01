@@ -1,23 +1,153 @@
-/* DONE: make it look awesome. */
-/* DONE: make it responsive. */
-
 :root {
-  --bs-primary: #275d38;
   --bs-body-font-family: 'Raleway', sans-serif;
-  --bs-border-radius: 10px;       /* primary color */
-  --bs-body-bg: #f5f5f5;        /* page background */
-  --bs-body-color: #333;        /* default text color */
-  --bs-border-radius: 8px;      /* rounded corners */
-  --bs-card-bg: #fff;           /* card background */
-  --bs-navbar-color: #fff; 
+  --bs-border-radius: 8px;
+  --school-primary: transparent;
+  --school-secondary: transparent;
+  --school-navbar-bg: transparent;
+  --school-accent: transparent;
+  --school-card-border: transparent;
+  --school-badge-bg: transparent;
+  --school-btn-color: #000;
 }
 
-[data-bs-theme="light"] {
-  --bs-body-bg: #ffffff;
-  --bs-body-color: #000000;
+/* UVU - base */
+body.uvu {
+  --school-primary: #275d38;
+  --school-secondary: #a8d5b5;
+  --school-navbar-bg: #275d38;
+  --school-accent: #edf5ef;
+  --school-card-border: #275d38;
+  --school-badge-bg: #275d38;
+  --school-btn-color: #fff;
 }
 
-[data-bs-theme="dark"] {
-  --bs-body-bg: #121212;
-  --bs-body-color: #ffffff;
+/* UofU - base */
+body.uofu {
+  --school-primary: #820000;
+  --school-secondary: #f5b8b8;
+  --school-navbar-bg: #820000;
+  --school-accent: #fff5f5;
+  --school-card-border: #cc0000;
+  --school-badge-bg: #cc0000;
+  --school-btn-color: #fff;
+}
+
+/* UVU light mode - overrides base */
+body.uvu[data-bs-theme="light"] {
+  --school-primary: #275d38;
+  --school-navbar-bg: #275d38;
+  --school-accent: #edf5ef;
+  --school-card-border: #275d38;
+  --school-badge-bg: #275d38;
+  --school-secondary: #a8d5b5;
+  --school-btn-color: #fff;
+}
+
+/* UVU dark mode - overrides base */
+body.uvu[data-bs-theme="dark"] {
+  --school-primary: #4a9e6b;
+  --school-navbar-bg: #1a3d25;
+  --school-accent: #0d1f13;
+  --school-card-border: #4a9e6b;
+  --school-badge-bg: #4a9e6b;
+  --school-secondary: #275d38;
+  --school-btn-color: #fff;
+}
+
+/* UofU light mode - overrides base */
+body.uofu[data-bs-theme="light"] {
+  --school-primary: #820000;
+  --school-navbar-bg: #820000;
+  --school-accent: #fff5f5;
+  --school-card-border: #cc0000;
+  --school-badge-bg: #820000;
+  --school-secondary: #f5b8b8;
+  --school-btn-color: #000;
+}
+
+/* UofU dark mode - overrides base */
+body.uofu[data-bs-theme="dark"] {
+  --school-primary: #e05555;
+  --school-navbar-bg: #4a0000;
+  --school-accent: #1a0000;
+  --school-card-border: #e05555;
+  --school-badge-bg: #e05555;
+  --school-secondary: #820000;
+  --school-btn-color: #fff;
+}
+
+/* because the links aren't clear on light/mode mode */
+html[data-bs-theme="light"] body.uofu .nav-item{
+  --school-btn-color: #000;
+}
+
+html[data-bs-theme="dark"] body.uofu .nav-item{
+  --school-btn-color: #fff;
+}
+
+html[data-bs-theme="light"] body.uvu .nav-item{
+  --school-btn-color: #000;
+}
+
+html[data-bs-theme="dark"] body.uvu .nav-item{
+  --school-btn-color: #fff;
+}
+
+body.uvu .navbar-brand img {
+  filter: 
+    drop-shadow(0.5px 0 0 white)
+    drop-shadow(-0.5px 0 0 white)
+    drop-shadow(0 0.5px 0 white)
+    drop-shadow(0 -0.5px 0 white);
+}
+
+/* only apply school styles when a school is selected */
+body.uvu .navbar,
+body.uofu .navbar {
+  background-color: var(--school-navbar-bg) !important;
+}
+
+body.uvu .btn-primary,
+body.uofu .btn-primary {
+  background-color: var(--school-primary) !important;
+  border-color: var(--school-primary) !important;
+  color: var(--school-btn-color) !important;
+}
+
+body.uvu .card,
+body.uofu .card {
+  border-top: 4px solid var(--school-card-border) !important;
+}
+
+body.uvu .nav-tabs .nav-link.active,
+body.uofu .nav-tabs .nav-link.active {
+  color: var(--school-primary) !important;
+  border-bottom: 3px solid var(--school-primary) !important;
+  font-weight: 600;
+}
+
+body.uvu .table thead th,
+body.uofu .table thead th {
+  background-color: var(--school-primary);
+  color: #fff;
+}
+
+body.uvu .school-banner,
+body.uofu .school-banner {
+  background-color: var(--school-accent);
+  border-bottom: 3px solid var(--school-primary);
+  color: var(--school-primary);
+}
+
+body.uvu .nav-link,
+body.uvu .navbar-text,
+body.uvu .navbar-brand,
+body.uofu .nav-link,
+body.uofu .navbar-text,
+body.uofu .navbar-brand {
+  color: var(--school-btn-color) !important;
+}
+
+.navbar {
+  height: 60px;
 }

@@ -1,64 +1,22 @@
 extends layout
 
-block content  
-  .d-flex.justify-content-center.align-items-center.vh-100
-    .rounded.card.p-4.w-50.text-center
-      form.d-flex.flex-column.gap-3
-        if user && user.role === 'teacher'
-          label(for="courseAdd") Add a course
-          br
-          input(
-            type="text"
-            id="courseAdd",
-            name="courseAdd"
-          )
-          button.btn.btn-outline-secondary(
-            type="button",
-            onclick="PostCourse()",
-            id="submitCourse"
-          ) Add Course
-        label(for="course") Select a course
-        br
-        select(
-          aria-label="Select Course",
-          id="course",
-          name="course",
-          data-cy="course_select",
-          onchange="displayUVUID(value)"
-        )
-        br
-        label(for="uvuId") UVU ID
-        br
-        //- oninput here makes it so only numbers are typed
-        input(
-          type="text",
-          id="uvuId",
-          name="uvuId",
-          data-cy="uvuId_input",
-          oninput="this.value = this.value.replace(/[^0-9]/g, '');",
-          maxlength="8",
-          placeholder="10234567"
-        )
-        h5(id="uvuIdDisplay", data-cy="uvuIdDisplay") Student Logs for
-        ul(data-cy="logs", id="logs", onclick="hideLog(this)").list-group.overflow-auto.border
-        #bottom
-          label.p-2 New Log
-          br
-          textarea(
-            style="height: 75px",
-            aria-label="add log textarea",
-            data-cy="log_textarea",
-            id="logText",
-            oninput="postLog()"
-          )
-          br
-          button.btn.btn-outline-secondary(
-            type="submit",
-            data-cy="add_log_btn",
-            onclick="submitButton(event)",
-            id="submit"
-          ) Add Log
+block content
+    .d-flex.justify-content-center.align-items-center.vh-100
+        .text-center
+            h2.mb-4 Welcome
+            p.text-muted.mb-5 Select your school to continue
+            .d-flex.gap-4.justify-content-center
 
-block scripts
-  script(src="./javascripts/script.js")
-  
+                a.text-decoration-none(href='/uvu/login')
+                    .card.p-4(style='width: 220px; border-top: 4px solid #275d38;')
+                        img(src="https://www.uvu.edu/sbdc/images/logos/uvu-logo-green.png", height="60", alt="UVU Logo").mb-3
+                        h5.fw-bold Utah Valley University
+                        p.text-muted.small Orem, Utah
+                        span.btn.btn-sm.mt-2(style='background-color: #275d38; color: white;') Login
+
+                a.text-decoration-none(href='/uofu/login')
+                    .card.p-4(style='width: 220px; border-top: 4px solid #820000;')
+                        img(src="https://logos-world.net/wp-content/uploads/2023/05/University-of-Utah-Logo.png", height="60", alt="UofU Logo").mb-3
+                        h5.fw-bold University of Utah
+                        p.text-muted.small Salt Lake City, Utah
+                        span.btn.btn-sm.mt-2(style='background-color: #820000; color: white;') Login

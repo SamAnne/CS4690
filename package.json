@@ -2,7 +2,19 @@
   "name": "node-starter",
   "version": "0.0.0",
   "private": true,
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/__tests__/**/*.ts"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/"
+    ]
+  },
   "scripts": {
+    "test": "jest",
     "build": "tsc && npx tsc public/javascripts/script.ts --target ES2020 --skipLibCheck true --strict false",
     "watch": "tsc -w",
     "prestart": "npm run build",
@@ -16,14 +28,20 @@
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
     "@types/http-errors": "^2.0.5",
+    "@types/jest": "^30.0.0",
     "@types/jquery": "^3.5.33",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/mongodb": "^4.0.7",
     "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.10",
     "@types/node": "^25.5.0",
+    "@types/supertest": "^7.2.0",
     "copyfiles": "^2.4.1",
+    "jest": "^30.3.0",
     "json-server": "0.17.0",
+    "mongodb-memory-server": "^11.0.1",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.9",
     "typescript": "^5.9.3"
   },
   "dependencies": {
