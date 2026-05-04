@@ -12,7 +12,7 @@ router.get('/', function(req: Request, res: Response, next: NextFunction) {
 });
 
 router.post('/', async function(req: Request, res: Response, next: NextFunction) {
-  const { username, password } = req.body;
+  const { username, email, password } = req.body;
   const school = res.locals.school;
   const roleMap: { [key: string]: Role } = {
     'student': Role.Student,
@@ -35,6 +35,7 @@ router.post('/', async function(req: Request, res: Response, next: NextFunction)
     const user = {
         Id: req.body.Id ?? "",
         Username: username,
+        Email: email,
         PasswordHash: await bcrypt.hash(password, 10),
         Role: roleMap[req.body.role] ?? Role.Student,
         School: school,

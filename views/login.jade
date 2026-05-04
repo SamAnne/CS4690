@@ -18,6 +18,9 @@ block content
         label(for="password").text-start Password
         input(type="password", id="password", name="password", required).form-control
         button.btn.btn-primary(type="submit") Login
+        .mt-3
+          a.btn.btn-outline-secondary.w-100(href='/#{school}/auth/google')
+            | Sign in with Google
         a.text-decoration-none(href="/#{school}/signup") Sign Up
     script.
         const form = document.getElementById('loginForm');

@@ -40,7 +40,8 @@ html(lang="en", data-theme="light")
           a.nav-link(href='/#{user.school}/logout') Logout
         else
           a.navbar-text.p-2.text-decoration-none(href="/") Home
-          a.navbar-text.p-2.text-decoration-none(href="/#{school}/login") Login
+          if school
+            a.navbar-text.p-2.text-decoration-none(href="/#{school}/login") Login
         .form-check.form-switch.ms-auto.navbar-text
           input.form-check-input(type="checkbox", id="dark_light", name="dark_light", onchange="setMode(this)")
           label.form-check-label.me-2(id="lightordark", for="dark_light") Light mode

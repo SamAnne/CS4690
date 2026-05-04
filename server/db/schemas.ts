@@ -22,6 +22,8 @@ const userSchema = new mongoose.Schema({
     Id:             { type: String, required: true},
     Username:       { type: String, required: true},
     PasswordHash:   { type: String, required: true},
+    GoogleId:       { type: String },
+    Email:          { type: String, required: true },
     Role:           { type: String, required: true},
     School:         { type: String, required: true},
     Courses:        { type: [String], required: true},

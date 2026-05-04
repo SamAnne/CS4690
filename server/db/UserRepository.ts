@@ -71,6 +71,10 @@ class UserRepository extends Repository<IEntity> {
             { returnDocument: 'after' }
         );
     }
+
+    public async getByGoogleId(googleId: string, school: string){
+        return await UserModel.findOne({ GoogleId: googleId, School: school });
+    }
 }
 
 export { UserRepository };

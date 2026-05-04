@@ -13,17 +13,21 @@ block content
         if error
           .alert.alert-danger= error
         h1 Sign Up
-        label(for="username") UVU ID
-        input#username(type="text", name="username", required, minlength='8', maxlength='8').form-control
-        label(for="password") Password
-        input#password(type="password", name="password", required, minlength='6').form-control
+        .text-start.gap-3
+          label(for="username") UVU ID
+          input#username(type="text", name="username", required, minlength='8', maxlength='8').form-control
+          label(for="email") Email
+          input#username(type="text", name="email", required).form-control
+          label(for="password") Password
+          input#password(type="password", name="password", required, minlength='6').form-control
         label Choose your role
-        .form-check
-          input#student.form-check-input(type="radio", value='student', name="role", required, checked)
-          label.form-check-label(for="student") Student
-        .form-check
-          input#teacher.form-check-input(type="radio", value='teacher', name="role")
-          label.form-check-label(for="teacher") Teacher
+        .text-start
+          .form-check
+            input#student.form-check-input(type="radio", value='student', name="role", required, checked)
+            label.form-check-label(for="student") Student
+          .form-check
+            input#teacher.form-check-input(type="radio", value='teacher', name="role")
+            label.form-check-label(for="teacher") Teacher
         button#signup.btn.btn-primary(type="submit") Sign Up
 block scripts 
     script.
