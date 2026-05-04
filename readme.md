@@ -1,5 +1,5 @@
 # Description
-Student Logs is a multi-tenant web application for tracking student academic logs across multiple institutions (UVU and University of Utah). Students submit logs per course, teachers and TAs manage course rosters and view logs, and admins have full control over users and courses. Each institution is fully isolated — users can only access data belonging to their school.
+This project is a multi-tenant web application for tracking student academic logs across multiple institutions (UVU and University of Utah). Students submit logs per course, teachers and TAs manage course rosters and view logs, and admins have full control over users and courses. Each institution is fully isolated — users can only access data belonging to their school.
 
 # Getting Started
 In order to run the program, use these command:
